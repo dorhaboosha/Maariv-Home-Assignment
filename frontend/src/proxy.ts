@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { TAG_REDIRECTS } from "./config/redirects";
 
-export function middleware(request: NextRequest) {
+export function proxy(request: NextRequest) {
   const { pathname } = request.nextUrl;
   const tagMatch = pathname.match(/^\/tags\/(\d+)$/);
 
