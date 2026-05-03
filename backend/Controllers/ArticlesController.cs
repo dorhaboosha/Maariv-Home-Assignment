@@ -1,3 +1,4 @@
+using MaarivMiniApp.Api.DTOs;
 using MaarivMiniApp.Api.Services;
 using Microsoft.AspNetCore.Mvc;
 
@@ -12,5 +13,12 @@ public class ArticlesController : ControllerBase
     public ArticlesController(ArticleService articleService)
     {
         _articleService = articleService;
+    }
+
+    [HttpGet]
+    public IActionResult GetAll()
+    {
+        var articles = _articleService.GetAllArticles();
+        return Ok(ApiResponse<object>.Ok(articles));
     }
 }
