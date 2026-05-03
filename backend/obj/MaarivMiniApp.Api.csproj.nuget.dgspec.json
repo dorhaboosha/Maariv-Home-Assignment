@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "c:\\Projects\\Maariv- Home Assignment\\maariv-mini-app\\backend\\MaarivMiniApp.Api.csproj": {}
+    "C:\\Projects\\Maariv- Home Assignment\\maariv-mini-app\\backend\\MaarivMiniApp.Api.csproj": {}
   },
   "projects": {
-    "c:\\Projects\\Maariv- Home Assignment\\maariv-mini-app\\backend\\MaarivMiniApp.Api.csproj": {
+    "C:\\Projects\\Maariv- Home Assignment\\maariv-mini-app\\backend\\MaarivMiniApp.Api.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "c:\\Projects\\Maariv- Home Assignment\\maariv-mini-app\\backend\\MaarivMiniApp.Api.csproj",
+        "projectUniqueName": "C:\\Projects\\Maariv- Home Assignment\\maariv-mini-app\\backend\\MaarivMiniApp.Api.csproj",
         "projectName": "MaarivMiniApp.Api",
-        "projectPath": "c:\\Projects\\Maariv- Home Assignment\\maariv-mini-app\\backend\\MaarivMiniApp.Api.csproj",
+        "projectPath": "C:\\Projects\\Maariv- Home Assignment\\maariv-mini-app\\backend\\MaarivMiniApp.Api.csproj",
         "packagesPath": "C:\\Users\\dorha\\.nuget\\packages\\",
-        "outputPath": "c:\\Projects\\Maariv- Home Assignment\\maariv-mini-app\\backend\\obj\\",
+        "outputPath": "C:\\Projects\\Maariv- Home Assignment\\maariv-mini-app\\backend\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"

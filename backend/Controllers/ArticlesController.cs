@@ -34,16 +34,20 @@ public class ArticlesController : ControllerBase
         return Ok(ApiResponse<object>.Ok(articles));
     }
 
-    [HttpGet("{id:int}")]
-    public IActionResult GetById(int id)
+    [HttpGet("{id}")]
+    public IActionResult GetById(string id)
     {
-        var article = _articleService.GetArticleById(id);
-        
-        if (article is null) 
+        if (!int.TryParse(id, out var articleId))
         {
-            return NotFound(ErrorResponse.From("ARTICLE_NOT_FOUND", $"Article with ID {id} was not found."));
+            return BadRequest(ErrorResponse.From("INVALID_ID", $"'{id}' is not a valid article ID. ID must be a number."));
         }
 
+        var article = _articleService.GetArticleById(articleId);
+        if (article is null)
+        {
+            return NotFound(ErrorResponse.From("ARTICLE_NOT_FOUND", $"Article with ID {articleId} was not found."));
+        }
+        
         return Ok(ApiResponse<object>.Ok(article));
     }
 }

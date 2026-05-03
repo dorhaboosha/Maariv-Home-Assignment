@@ -22,15 +22,20 @@ public class TagsController : ControllerBase
         return Ok(ApiResponse<object>.Ok(tags));
     }
 
-    [HttpGet("{id:int}")]
-    public IActionResult GetById(int id)
+    [HttpGet("{id}")]
+    public IActionResult GetById(string id)
     {
-        var tag = _tagService.GetTagById(id);
-        if (tag is null) 
+        if (!int.TryParse(id, out var tagId)) 
         {
-            return NotFound(ErrorResponse.From("TAG_NOT_FOUND", $"Tag with ID {id} was not found."));
+            return BadRequest(ErrorResponse.From("INVALID_ID", $"'{id}' is not a valid tag ID. ID must be a number."));
         }
 
+        var tag = _tagService.GetTagById(tagId);
+        if (tag is null)
+        {
+            return NotFound(ErrorResponse.From("TAG_NOT_FOUND", $"Tag with ID {tagId} was not found."));
+        }
+        
         return Ok(ApiResponse<object>.Ok(tag));
     }
 }
