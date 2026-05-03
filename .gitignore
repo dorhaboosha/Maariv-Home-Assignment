@@ -1,0 +1,51 @@
+# ─── ASP.NET Core / .NET ───────────────────────────────────────────────────────
+
+# Build outputs
+backend/bin/
+backend/obj/
+
+# User-specific Visual Studio files
+*.user
+*.suo
+.vs/
+
+# Rider IDE
+.idea/
+
+# NuGet packages (restored automatically)
+backend/*.nupkg
+
+# Publish output
+backend/publish/
+
+# Environment overrides
+backend/appsettings.*.local.json
+
+
+# ─── Next.js / Node ─────────────────────────────────────────────────────────────
+
+# Dependencies
+frontend/node_modules/
+
+# Next.js build output
+frontend/.next/
+frontend/out/
+
+# Environment variables
+frontend/.env.local
+frontend/.env.*.local
+
+# Next.js cache
+frontend/.next/cache/
+
+
+# ─── General ────────────────────────────────────────────────────────────────────
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Editor directories
+.vscode/
+*.swp
+*.swo
