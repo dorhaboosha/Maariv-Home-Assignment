@@ -51,13 +51,13 @@ export default function AdditionalArticlesLazy({ excludeId }: AdditionalArticles
   }, [excludeId]);
 
   return (
-    <section ref={sectionRef} className="flex flex-col gap-3">
-      <h2 className="text-xl font-bold">כתבות נוספות</h2>
+    <section ref={sectionRef} className="border-t border-gray-100 pt-4 flex flex-col gap-3">
+      <h2 className="text-lg font-bold">כתבות נוספות</h2>
 
       {loading && (
-        <div className="flex flex-col gap-2 animate-pulse">
+        <div className="flex flex-col gap-3 animate-pulse">
           {[1, 2, 3].map((i) => (
-            <div key={i} className="h-5 bg-gray-200 rounded w-3/4" />
+            <div key={i} className="h-5 bg-gray-200 rounded w-4/5" />
           ))}
         </div>
       )}
@@ -67,10 +67,10 @@ export default function AdditionalArticlesLazy({ excludeId }: AdditionalArticles
       )}
 
       {articles && articles.length > 0 && (
-        <ul className="flex flex-col gap-2">
+        <ul className="flex flex-col gap-3">
           {articles.map((article) => (
-            <li key={article.id}>
-              <Link href={`/article/${article.id}`} className="text-blue-600 hover:underline text-sm">
+            <li key={article.id} className="border-b border-gray-100 pb-2 last:border-0">
+              <Link href={`/article/${article.id}`} className="text-sm text-blue-700 hover:underline leading-snug">
                 {article.title}
               </Link>
             </li>

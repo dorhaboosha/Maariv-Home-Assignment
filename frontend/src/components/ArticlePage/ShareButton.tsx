@@ -29,10 +29,11 @@ export default function ShareButton() {
   }
 
   return (
-    <div className="flex flex-col items-start gap-1">
-      <button onClick={handleShare} aria-label="שתף כתבה" className="flex items-center gap-2 px-4 py-2 bg-gray-100 hover:bg-gray-200 rounded-lg transition-colors">
+    <div className="border-t border-gray-100 pt-4 flex flex-col items-start gap-2">
+      <button onClick={handleShare} aria-label="שתף כתבה" 
+        className="flex items-center gap-2 px-4 py-2 rounded-lg bg-gray-100 hover:bg-gray-200 active:scale-95 transition-all text-sm font-medium">
         <Image src="/share-icon.svg" alt="שתף" width={20} height={20} unoptimized />
-        <span className="text-sm">שתף</span>
+        שתף כתבה
       </button>
       {copied && (
         <p className="text-xs text-green-600">הקישור הועתק ללוח!</p>
