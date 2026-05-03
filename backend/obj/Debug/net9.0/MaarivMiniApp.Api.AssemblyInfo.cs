@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("MaarivMiniApp.Api")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+bf6637e2e98de6073c3fc65bbd65e2ff988c449e")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+f6273621f53607ad873f92e2bcfb73f45794ab2a")]
 [assembly: System.Reflection.AssemblyProductAttribute("MaarivMiniApp.Api")]
 [assembly: System.Reflection.AssemblyTitleAttribute("MaarivMiniApp.Api")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

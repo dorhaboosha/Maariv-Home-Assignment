@@ -11,7 +11,7 @@ public class ArticleService
     public ArticleService(FileDataReader fileDataReader, IConfiguration config)
     {
         _fileDataReader = fileDataReader;
-        _fileName = config["DataFiles:Articles"];
+        _fileName = config.GetValue<string>("DataFiles:Articles") ?? throw new InvalidOperationException("DataFiles:Articles is not configured in appsettings.json.");
     }
 
     public List<Article> GetAllArticles()

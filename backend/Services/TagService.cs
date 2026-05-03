@@ -11,7 +11,7 @@ public class TagService
     public TagService(FileDataReader fileDataReader, IConfiguration config)
     {
         _fileDataReader = fileDataReader;
-        _fileName = config["DataFiles:Tags"];
+        _fileName = config.GetValue<string>("DataFiles:Tags") ?? throw new InvalidOperationException("DataFiles:Tags is not configured in appsettings.json.");
     }
 
     public List<Tag> GetAllTags()
