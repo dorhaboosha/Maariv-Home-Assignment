@@ -20,17 +20,20 @@ export default async function TagPage({ params }: TagPageProps) {
     if (status === 404) {
       notFound();
     }
-    
     logError("Failed to fetch tag", "TagPage", String(err));
     throw err;
   }
 
   return (
-    <main className="page-container flex flex-col gap-6">
-      <h1 className="text-2xl md:text-3xl font-bold">{tag.tagName}</h1>
+    <main className="page-container flex flex-col gap-5">
+      <header className="pb-3">
+        <h1 className="text-2xl md:text-3xl font-bold">
+          {tag.tagName}
+        </h1>
+      </header>
 
       {tag.tagImage && (
-        <div className="relative w-full aspect-video rounded overflow-hidden">
+        <div className="relative w-full aspect-video rounded overflow-hidden shadow-sm">
           <Image src={tag.tagImage} alt={tag.tagName} fill className="object-cover" sizes="(max-width: 768px) 100vw, 800px" priority />
         </div>
       )}
