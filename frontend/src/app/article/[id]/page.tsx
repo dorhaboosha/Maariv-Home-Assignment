@@ -4,7 +4,6 @@ import { logError } from "../../../services/loggerService";
 import ArticleContent from "../../../components/ArticlePage/ArticleContent";
 import ArticleTags from "../../../components/ArticlePage/ArticleTags";
 import AdditionalArticlesLazy from "../../../components/ArticlePage/AdditionalArticlesLazy";
-import ShareButton from "../../../components/ArticlePage/ShareButton";
 import type { Article } from "../../../types/article";
 
 interface ArticlePageProps {
@@ -29,7 +28,6 @@ export default async function ArticlePage({ params }: ArticlePageProps) {
       <ArticleContent article={article} />
       <ArticleTags tags={article.tags} />
       <AdditionalArticlesLazy excludeId={article.id} />
-      <ShareButton />
     </main>
   );
 }

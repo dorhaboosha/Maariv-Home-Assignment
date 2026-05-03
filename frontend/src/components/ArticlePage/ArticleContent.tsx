@@ -1,5 +1,6 @@
 import Image from "next/image";
 import type { Article } from "../../types/article";
+import ShareButton from "./ShareButton";
 
 interface ArticleContentProps {
   article: Article;
@@ -12,11 +13,14 @@ export default function ArticleContent({ article }: ArticleContentProps) {
         {article.title}
       </h1>
 
-      <p className="text-base md:text-lg text-gray-600 leading-relaxed">
+      <p className="text-base md:text-lg leading-relaxed font-bold">
         {article.description}
       </p>
 
-      <time className="text-sm text-gray-400">{article.date}</time>
+      <div className="flex items-center justify-between">
+        <time dir="ltr" className="text-sm">{article.date}</time>
+        <ShareButton />
+      </div>
 
       {article.imageURL && (
         <figure className="flex flex-col gap-1">
@@ -24,14 +28,14 @@ export default function ArticleContent({ article }: ArticleContentProps) {
             <Image src={article.imageURL} alt={article.title} fill className="object-cover" sizes="(max-width: 768px) 100vw, 800px" priority />
           </div>
           {article.imageCredit && (
-            <figcaption className="text-xs text-gray-400 text-end">
+            <figcaption className="text-xs text-right">
               {article.imageCredit}
             </figcaption>
           )}
         </figure>
       )}
 
-      <p className="text-base leading-loose whitespace-pre-line text-gray-800">
+      <p className="text-base leading-loose whitespace-pre-line">
         {article.body}
       </p>
     </article>
