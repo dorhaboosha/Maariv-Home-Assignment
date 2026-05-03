@@ -1,5 +1,13 @@
+/*
+ * Global styles for the Maariv Mini App frontend.
+ *
+ * Tailwind CSS v4 is loaded via the PostCSS pipeline. The @import pulls in the full framework;
+ * @layer base / @layer utilities keep reset + custom helpers organised without fighting Tailwind's cascade.
+ */
+
 @import "tailwindcss";
 
+/* ── Base layer: opinionated resets and document defaults (apply before component utilities). ── */
 @layer base {
   *,
   *::before,
@@ -13,6 +21,7 @@
   }
 
   html {
+    /* Assignment / Maariv-style readability; stacks with system Helvetica on macOS. */
     font-family: Arial, Helvetica, sans-serif;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
@@ -24,11 +33,16 @@
     color: #171717;
   }
 
+  /*
+   * Neutral link styling — unstyled links inherit body color.
+   * Components that should look like links (e.g. ArticleTags) set explicit text + underline classes.
+   */
   a {
     color: inherit;
     text-decoration: none;
   }
 
+  /* Responsive images by default; pairs well with next/image fill + object-cover. */
   img {
     max-width: 100%;
     height: auto;
@@ -36,10 +50,12 @@
   }
 }
 
+/* ── Project utilities: layout helpers used across pages (RTL-safe via logical properties). ── */
 @layer utilities {
   .page-container {
     width: 100%;
     max-width: 800px;
+    /* margin-inline / padding-inline respect dir="rtl" without separate LTR rules. */
     margin-inline: auto;
     padding-inline: 1rem;
     padding-block: 1.5rem;
