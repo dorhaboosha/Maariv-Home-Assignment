@@ -1,0 +1,42 @@
+[
+      {
+        "tagId": 17,
+        "tagName": "חמאס",
+        "tagImage": "https://images.maariv.co.il/image/upload/513561"
+      },
+      {
+        "tagId": 650,
+        "tagName": "מחבלים",
+        "tagImage": "https://images.maariv.co.il/image/upload/513561"
+      },
+      {
+        "tagId": 11372,
+        "tagName": "טלפון נייד",
+        "tagImage": "https://images.maariv.co.il/image/upload/513561"
+      },
+      {
+        "tagId": 33,
+        "tagName": "בנימין נתניהו",
+        "tagImage": "https://images.maariv.co.il/image/upload/513561"
+      },
+      {
+        "tagId": 11575,
+        "tagName": "רפיח",
+        "tagImage": "https://images.maariv.co.il/image/upload/513561"
+      },
+      {
+        "tagId": 49322,
+        "tagName": "מלחמת חרבות ברזל",
+        "tagImage": "https://images.maariv.co.il/image/upload/513561"
+      },
+      {
+        "tagId": 47,
+        "tagName": "חיזבאללה",
+        "tagImage": "https://images.maariv.co.il/image/upload/513561"
+      },
+      {
+        "tagId": 1058,
+        "tagName": "לבנון",
+        "tagImage": "https://images.maariv.co.il/image/upload/513561"
+      }
+]
