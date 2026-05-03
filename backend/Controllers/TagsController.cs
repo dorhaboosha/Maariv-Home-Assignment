@@ -14,4 +14,11 @@ public class TagsController : ControllerBase
     {
         _tagService = tagService;
     }
+
+    [HttpGet]
+    public IActionResult GetAll()
+    {
+        var tags = _tagService.GetAllTags();
+        return Ok(ApiResponse<object>.Ok(tags));
+    }
 }
