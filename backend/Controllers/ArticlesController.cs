@@ -22,6 +22,18 @@ public class ArticlesController : ControllerBase
         return Ok(ApiResponse<object>.Ok(articles));
     }
 
+    [HttpGet("additional")]
+    public IActionResult GetAdditional([FromQuery] int? excludeId)
+    {
+        if (excludeId is null) 
+        {
+            return BadRequest(ErrorResponse.From("INVALID_EXCLUDE_ID", "excludeId query parameter is required."));
+        }
+
+        var articles = _articleService.GetAdditionalArticles(excludeId.Value);
+        return Ok(ApiResponse<object>.Ok(articles));
+    }
+
     [HttpGet("{id:int}")]
     public IActionResult GetById(int id)
     {
