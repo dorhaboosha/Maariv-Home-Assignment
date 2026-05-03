@@ -20,7 +20,7 @@ export default async function HomePage() {
       </header>
 
       {articles.length === 0 ? (
-        <p className="text-md">לא נמצאו כתבות.</p>
+        <p className="text-base">לא נמצאו כתבות.</p>
       ) : (
         <ul className="flex flex-col divide-y divide-gray-300">
           {articles.map((article) => (
@@ -32,7 +32,7 @@ export default async function HomePage() {
                 <h3 className="text-base font-bold group-hover:text-blue-700 transition-colors leading-snug">
                   {article.title}
                 </h3>
-                <p className="text-md line-clamp-2 leading-relaxed">
+                <p className="text-base line-clamp-2 leading-relaxed">
                   {article.description}
                 </p>
                 <time dir="ltr" className="text-sm mt-1">
