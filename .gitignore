@@ -26,6 +26,7 @@ backend/appsettings.*.local.json
 
 # Dependencies
 frontend/node_modules/
+/node_modules/
 
 # Next.js build output
 frontend/.next/
