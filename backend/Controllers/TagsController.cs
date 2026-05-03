@@ -21,4 +21,16 @@ public class TagsController : ControllerBase
         var tags = _tagService.GetAllTags();
         return Ok(ApiResponse<object>.Ok(tags));
     }
+
+    [HttpGet("{id:int}")]
+    public IActionResult GetById(int id)
+    {
+        var tag = _tagService.GetTagById(id);
+        if (tag is null) 
+        {
+            return NotFound(ErrorResponse.From("TAG_NOT_FOUND", $"Tag with ID {id} was not found."));
+        }
+
+        return Ok(ApiResponse<object>.Ok(tag));
+    }
 }
