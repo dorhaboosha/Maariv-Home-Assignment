@@ -1,0 +1,12 @@
+{
+  "Version": 1,
+  "Hash": "mz2qgvfIor58kihDKiL0ccer4mIjrREK5pC6ID/N7Cg=",
+  "Source": "MaarivMiniApp.Api",
+  "BasePath": "_content/MaarivMiniApp.Api",
+  "Mode": "Default",
+  "ManifestType": "Build",
+  "ReferencedProjectsConfiguration": [],
+  "DiscoveryPatterns": [],
+  "Assets": [],
+  "Endpoints": []
+}
