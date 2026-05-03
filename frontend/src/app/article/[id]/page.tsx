@@ -7,9 +7,20 @@ import AdditionalArticlesLazy from "../../../components/ArticlePage/AdditionalAr
 import type { Article } from "../../../types/article";
 
 interface ArticlePageProps {
+  /** Dynamic segment from the URL (e.g. `/article/42` → `"42"`). Typed as a Promise per Next.js 15+ App Router conventions. */
   params: Promise<{ id: string }>;
 }
 
+/**
+ * Article detail page — composes the main content, tag links, and lazy-loaded "more articles" section.
+ *
+ * - **Server Component** — initial article HTML is streamed from the server; `getArticleById` uses `cache: "no-store"`.
+ * - **Render order** (assignment): main content → tags → additional articles (share lives inside `ArticleContent`).
+ * - **404** — `notFound()` when the API returns 404 (`notFound` throws — code below does not run for that case).
+ * - **Other errors** — `logError` then rethrow so a non-404 failure still surfaces as an error.
+ *
+ * `AdditionalArticlesLazy` is a Client Component: it defers its API call until the section scrolls into view.
+ */
 export default async function ArticlePage({ params }: ArticlePageProps) {
   const { id } = await params;
 
