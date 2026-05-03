@@ -1,3 +1,4 @@
+using MaarivMiniApp.Api.Models;
 using MaarivMiniApp.Api.Services;
 using Microsoft.AspNetCore.Mvc;
 
@@ -12,5 +13,12 @@ public class LogsController : ControllerBase
     public LogsController(FrontendLogService logService)
     {
         _logService = logService;
+    }
+
+    [HttpPost]
+    public IActionResult Post([FromBody] FrontendLogEntry entry)
+    {
+        _logService.Log(entry);
+        return Ok();
     }
 }
