@@ -4,8 +4,8 @@ if (!baseUrl) {
   throw new Error("NEXT_PUBLIC_API_BASE_URL is not defined.");
 }
 
-export async function apiClient<T>(path: string): Promise<T> {
-  const response = await fetch(`${baseUrl}${path}`, { cache: "no-store" });
+export async function apiClient<T>(path: string, init?: Omit<RequestInit, "cache">): Promise<T> {
+  const response = await fetch(`${baseUrl}${path}`, { ...init, cache: "no-store" });
 
   if (!response.ok) {
     const error = await response.json().catch(() => null);
