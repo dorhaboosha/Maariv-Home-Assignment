@@ -1,66 +1,48 @@
+import Link from "next/link";
 import Image from "next/image";
-import styles from "./page.module.css";
+import { getAllArticles } from "../services/articleService";
+import type { Article } from "../types/article";
 
-export default function Home() {
+export default async function HomePage() {
+  let articles: Article[] = [];
+  try {
+    articles = await getAllArticles();
+  } 
+  catch {
+    articles = [];
+  }
+
   return (
-    <div className={styles.page}>
-      <main className={styles.main}>
-        <Image
-          className={styles.logo}
-          src="/next.svg"
-          alt="Next.js logo"
-          width={100}
-          height={20}
-          priority
-        />
-        <div className={styles.intro}>
-          <h1>To get started, edit the page.tsx file.</h1>
-          <p>
-            Looking for a starting point or more instructions? Head over to{" "}
-            <a
-              href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              Templates
-            </a>{" "}
-            or the{" "}
-            <a
-              href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              Learning
-            </a>{" "}
-            center.
-          </p>
-        </div>
-        <div className={styles.ctas}>
-          <a
-            className={styles.primary}
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className={styles.logo}
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={16}
-              height={16}
-            />
-            Deploy Now
-          </a>
-          <a
-            className={styles.secondary}
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Documentation
-          </a>
-        </div>
-      </main>
-    </div>
+    <main className="page-container flex flex-col gap-6">
+      <header className="flex flex-col items-center gap-2 pb-5">
+        <Image src="/Maariv.png" alt="מעריב" width={200} height={60} priority className="h-14 w-auto" />
+        <h2 className="text-lg font-bold">כתבות אחרונות</h2>
+      </header>
+
+      {articles.length === 0 ? (
+        <p className="text-md">לא נמצאו כתבות.</p>
+      ) : (
+        <ul className="flex flex-col divide-y divide-gray-300">
+          {articles.map((article) => (
+            <li key={article.id}>
+              <Link
+                href={`/article/${article.id}`}
+                className="flex flex-col gap-1 py-4 group"
+              >
+                <h3 className="text-base font-bold group-hover:text-blue-700 transition-colors leading-snug">
+                  {article.title}
+                </h3>
+                <p className="text-md line-clamp-2 leading-relaxed">
+                  {article.description}
+                </p>
+                <time dir="ltr" className="text-sm mt-1">
+                  {article.date}
+                </time>
+              </Link>
+            </li>
+          ))}
+        </ul>
+      )}
+    </main>
   );
 }
