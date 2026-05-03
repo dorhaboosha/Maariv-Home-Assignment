@@ -6,6 +6,15 @@ interface ArticleTagsProps {
   tags: ArticleTag[];
 }
 
+/**
+ * Renders article tags as a comma-separated list of links.
+ *
+ * Tags listed in `TAG_REDIRECTS` open the external Maariv page in a **new tab** via a plain `<a>`.
+ * Using `<a>` instead of `next/link` avoids the App Router prefetching RSC payloads for routes
+ * that immediately redirect at the edge — which would spam the console with harmless errors.
+ *
+ * All other tags use `next/link` to `/tags/{tagId}` for fast client-side navigation.
+ */
 export default function ArticleTags({ tags }: ArticleTagsProps) {
   if (tags.length === 0) return null;
 

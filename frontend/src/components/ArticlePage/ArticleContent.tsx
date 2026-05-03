@@ -6,6 +6,13 @@ interface ArticleContentProps {
   article: Article;
 }
 
+/**
+ * Renders the main article body for a detail page: headline, subtitle, date row with share,
+ * hero image (when present), and full text.
+ *
+ * This is a **Server Component** — it has no browser-only APIs and ships static HTML on first paint.
+ * `ShareButton` is the only interactive child and is a separate Client Component island.
+ */
 export default function ArticleContent({ article }: ArticleContentProps) {
   return (
     <article className="flex flex-col gap-5">
@@ -17,20 +24,35 @@ export default function ArticleContent({ article }: ArticleContentProps) {
         {article.description}
       </p>
 
+      {/* In RTL, flex items show in order from inline-end to inline-start — placing <time> first
+          puts the date on the visual right; ShareButton follows on the visual left. */}
       <div className="flex items-center justify-between">
-        <time dir="ltr" className="text-sm">{article.date}</time>
+        {/* dir="ltr" keeps numeric dates (e.g. 26/02/2024) from being visually reordered by the page RTL context. */}
+        <time dir="ltr" className="text-sm">
+          {article.date}
+        </time>
         <ShareButton />
       </div>
 
       {article.imageURL && (
         <figure className="flex flex-col gap-1">
           <div className="relative w-full aspect-video rounded overflow-hidden">
-            <Image src={article.imageURL} alt={article.title} fill className="object-cover" sizes="(max-width: 768px) 100vw, 800px" priority />
+            <Image
+              src={article.imageURL}
+              alt={article.title}
+              fill
+              className="object-cover"
+              sizes="(max-width: 768px) 100vw, 800px"
+              priority
+            />
           </div>
           {article.imageCredit && (
-            <figcaption className="text-xs text-right">
-              {article.imageCredit}
-            </figcaption>
+            <>
+              {/* text-right: explicit physical alignment so credit stays under the image on the correct side in RTL. */}
+              <figcaption className="text-xs text-right">
+                {article.imageCredit}
+              </figcaption>
+            </>
           )}
         </figure>
       )}
