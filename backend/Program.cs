@@ -1,6 +1,20 @@
 var builder = WebApplication.CreateBuilder(args);
 
-builder.Services.AddControllers();
+builder.Services.AddControllers()
+    .ConfigureApiBehaviorOptions(options =>
+    {
+        options.InvalidModelStateResponseFactory = context =>
+        {
+            var errors = context.ModelState
+                .Where(e => e.Value?.Errors.Count > 0)
+                .Select(e => $"{e.Key}: {string.Join(", ", e.Value!.Errors.Select(x => x.ErrorMessage))}")
+                .ToList();
+
+            var error = MaarivMiniApp.Api.DTOs.ErrorResponse.From("VALIDATION_ERROR", "One or more validation errors occurred.", errors);
+
+            return new Microsoft.AspNetCore.Mvc.BadRequestObjectResult(error);
+        };
+    });
 
 builder.Services.AddSingleton<MaarivMiniApp.Api.Services.FileDataReader>();
 builder.Services.AddScoped<MaarivMiniApp.Api.Services.ArticleService>();
