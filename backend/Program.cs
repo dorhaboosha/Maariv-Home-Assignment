@@ -1,10 +1,14 @@
 var builder = WebApplication.CreateBuilder(args);
 
+// Override the default 400 response that ASP.NET Core produces for invalid model state
+// so it uses our standard ErrorResponse shape instead of the built-in ProblemDetails format.
+// This keeps all error responses — validation or otherwise — consistent for the frontend.
 builder.Services.AddControllers()
     .ConfigureApiBehaviorOptions(options =>
     {
         options.InvalidModelStateResponseFactory = context =>
         {
+            // Collect every field-level error message into a flat list of "field: message" strings.
             var errors = context.ModelState
                 .Where(e => e.Value?.Errors.Count > 0)
                 .Select(e => $"{e.Key}: {string.Join(", ", e.Value!.Errors.Select(x => x.ErrorMessage))}")
@@ -16,11 +20,15 @@ builder.Services.AddControllers()
         };
     });
 
+// FileDataReader is Singleton because it holds no mutable state — it reads files on demand
+// and is safe to share across requests. Services that depend on it are Scoped (per-request).
 builder.Services.AddSingleton<MaarivMiniApp.Api.Services.FileDataReader>();
 builder.Services.AddScoped<MaarivMiniApp.Api.Services.ArticleService>();
 builder.Services.AddScoped<MaarivMiniApp.Api.Services.TagService>();
 builder.Services.AddScoped<MaarivMiniApp.Api.Services.FrontendLogService>();
 
+// Allow the Next.js dev server to call this API without CORS errors.
+// In production this policy would be updated to the real frontend domain.
 builder.Services.AddCors(options =>
 {
     options.AddPolicy("AllowFrontend", policy =>
@@ -33,6 +41,9 @@ builder.Services.AddCors(options =>
 
 var app = builder.Build();
 
+// Catch any unhandled exception and return a standardised 500 ErrorResponse instead of
+// the default HTML error page or an empty response. This ensures no stack traces or
+// internal details are ever leaked to the client.
 app.UseExceptionHandler(errApp =>
 {
     errApp.Run(async context =>
@@ -45,6 +56,8 @@ app.UseExceptionHandler(errApp =>
 });
 
 app.UseHttpsRedirection();
+// CORS must be applied before MapControllers so the policy headers are present on every response,
+// including preflight OPTIONS requests sent by the browser before the actual API call.
 app.UseCors("AllowFrontend");
 app.MapControllers();
 
