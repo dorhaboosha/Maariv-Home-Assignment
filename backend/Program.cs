@@ -3,6 +3,8 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddControllers();
 
 builder.Services.AddSingleton<MaarivMiniApp.Api.Services.FileDataReader>();
+builder.Services.AddScoped<MaarivMiniApp.Api.Services.ArticleService>();
+builder.Services.AddScoped<MaarivMiniApp.Api.Services.TagService>();
 
 builder.Services.AddCors(options =>
 {
