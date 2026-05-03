@@ -16,6 +16,17 @@ builder.Services.AddCors(options =>
 
 var app = builder.Build();
 
+app.UseExceptionHandler(errApp =>
+{
+    errApp.Run(async context =>
+    {
+        context.Response.StatusCode = 500;
+        context.Response.ContentType = "application/json";
+        var error = MaarivMiniApp.Api.DTOs.ErrorResponse.From("INTERNAL_ERROR", "An unexpected error occurred.");
+        await context.Response.WriteAsJsonAsync(error);
+    });
+});
+
 app.UseHttpsRedirection();
 app.UseCors("AllowFrontend");
 app.MapControllers();
