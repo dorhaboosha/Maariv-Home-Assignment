@@ -4,6 +4,9 @@
 backend/bin/
 backend/obj/
 
+# Serilog rolling log files — generated at runtime, not part of the source
+backend/logs/
+
 # User-specific Visual Studio files
 *.user
 *.suo

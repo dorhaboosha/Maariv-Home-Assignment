@@ -1,4 +1,25 @@
+using Serilog;
+
+// Configure Serilog before the host is built so startup errors are also captured.
+// - Console sink: keeps the live terminal output developers already rely on.
+// - File sink: persists every log entry to a daily rolling file under backend/logs/.
+//   Files roll at midnight; the date is embedded in the filename (e.g. app20260504.log).
+Log.Logger = new LoggerConfiguration()
+    .MinimumLevel.Information()
+    .WriteTo.Console()
+    .WriteTo.File(
+        path: "logs/app.log",
+        rollingInterval: RollingInterval.Day,
+        retainedFileCountLimit: 30,          // keep at most 30 daily files (~1 month)
+        outputTemplate: "{Timestamp:yyyy-MM-dd HH:mm:ss} [{Level:u3}] {Message:lj}{NewLine}{Exception}"
+    )
+    .CreateLogger();
+
 var builder = WebApplication.CreateBuilder(args);
+
+// Replace the default Microsoft logging pipeline with Serilog so all ILogger calls
+// (framework, backend services, and FrontendLogService) write to the same sinks.
+builder.Host.UseSerilog();
 
 // Override the default 400 response that ASP.NET Core produces for invalid model state
 // so it uses our standard ErrorResponse shape instead of the built-in ProblemDetails format.
