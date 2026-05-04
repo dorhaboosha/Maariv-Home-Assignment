@@ -57,13 +57,18 @@ builder.Services.AddScoped<MaarivMiniApp.Api.Services.TagService>();
 builder.Services.AddScoped<MaarivMiniApp.Api.Services.CategoryService>();
 builder.Services.AddScoped<MaarivMiniApp.Api.Services.FrontendLogService>();
 
-// Allow the Next.js dev server to call this API without CORS errors.
-// In production this policy would be updated to the real frontend domain.
+// Read allowed origins from configuration so the production frontend URL can be injected
+// via an environment variable on Render (Cors__AllowedOrigins__0=https://your-app.onrender.com)
+// without changing code. localhost:3000 is the default in appsettings.json for local dev.
+var allowedOrigins = builder.Configuration
+    .GetSection("Cors:AllowedOrigins")
+    .Get<string[]>() ?? ["http://localhost:3000"];
+
 builder.Services.AddCors(options =>
 {
     options.AddPolicy("AllowFrontend", policy =>
     {
-        policy.WithOrigins("http://localhost:3000")
+        policy.WithOrigins(allowedOrigins)
               .AllowAnyHeader()
               .AllowAnyMethod();
     });

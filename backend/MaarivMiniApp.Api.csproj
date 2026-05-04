@@ -11,4 +11,14 @@
     <PackageReference Include="Serilog.Sinks.File" Version="7.0.0" />
   </ItemGroup>
 
+  <!-- Include all files in Data/ in both local build output and dotnet publish output.
+       Without this, data files are missing when Render runs dotnet publish and the API
+       cannot read articles, tags, or categories. -->
+  <ItemGroup>
+    <Content Include="Data\**">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <CopyToPublishDirectory>Always</CopyToPublishDirectory>
+    </Content>
+  </ItemGroup>
+
 </Project>
