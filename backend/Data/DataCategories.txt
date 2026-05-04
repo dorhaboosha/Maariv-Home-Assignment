@@ -1,0 +1,10 @@
+[
+  { "categoryId": 1, "categoryName": "ספורט", "active": true },
+  { "categoryId": 2, "categoryName": "פוליטיקה", "active": true },
+  { "categoryId": 3, "categoryName": "כלכלה", "active": true },
+  { "categoryId": 4, "categoryName": "בריאות", "active": true },
+  { "categoryId": 5, "categoryName": "טכנולוגיה", "active": false },
+  { "categoryId": 6, "categoryName": "ספורט בינלאומי", "active": true },
+  { "categoryId": 7, "categoryName": "בידור", "active": false },
+  { "categoryId": 8, "categoryName": "בטחון", "active": true }
+]
