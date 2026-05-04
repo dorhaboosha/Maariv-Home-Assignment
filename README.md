@@ -7,17 +7,31 @@ A monorepo containing a Hebrew news mini-application built as a home assignment.
 
 ---
 
+## Live Demo
+
+| Service | URL |
+|---------|-----|
+| Frontend | [https://maariv-mini-app.onrender.com](https://maariv-mini-app.onrender.com) |
+| Backend API | [https://maariv-backend.onrender.com](https://maariv-backend.onrender.com) |
+
+Both services are deployed on [Render.com](https://render.com). The backend runs as a Docker container (.NET 9), and the frontend runs as a Node.js web service (Next.js).
+
+> **Note:** Render free-tier services spin down after inactivity. The first request after a cold start may take 30–60 seconds.
+
+---
+
 ## Project Structure
 
 ```
 maariv-mini-app/
 ├── backend/               # ASP.NET Core Web API
-│   ├── Controllers/       # ArticlesController, TagsController, CategoriesController, LogsController
+│   ├── Controllers/       # ArticlesController, TagsController, CategoriesController, LogsController, HealthController
 │   ├── Data/              # Data.txt (articles), DataTags.txt (tags), DataCategories.txt (categories)
 │   ├── DTOs/              # ApiResponse<T>, ErrorResponse, ApiError
 │   ├── logs/              # Daily rolling log files written by Serilog (gitignored)
 │   ├── Models/            # Article, Tag, ArticleTag, Category, FrontendLogEntry
 │   ├── Services/          # ArticleService, TagService, CategoryService, FrontendLogService, FileDataReader
+│   ├── Dockerfile         # Multi-stage Docker build for Render deployment
 │   └── Program.cs
 └── frontend/              # Next.js app
     └── src/
@@ -37,7 +51,7 @@ maariv-mini-app/
 
 ---
 
-## Running the App
+## Running the App Locally
 
 ### Option 1 — Both at once (recommended)
 
@@ -48,7 +62,7 @@ npm install
 npm run dev
 ```
 
-This uses [`concurrently`](https://github.com/open-cli-tools/concurrently) to start both servers in one terminal. Backend output is prefixed `[backend]` (cyan) and frontend `[frontend]` (magenta). Press `Ctrl+C` once to stop both.
+This uses [`concurrently`](https://github.com/open-cli-tools/concurrently) to start both servers in one terminal. Backend output is prefixed `[backend]` (cyan) and frontend `[frontend]` (magenta). The frontend waits for the backend to be ready before starting. Press `Ctrl+C` once to stop both.
 
 ### Option 2 — Separately
 
@@ -69,32 +83,74 @@ Runs on `http://localhost:3000`
 
 ## Environment Variables
 
-The frontend reads one environment variable from `frontend/.env.local`:
+### Frontend
+
+Create `frontend/.env.local` (gitignored):
 
 ```
 NEXT_PUBLIC_API_BASE_URL=http://localhost:5166
 ```
 
-This file is gitignored. If it is missing, the frontend will throw an error on startup.
+This is the only required environment variable. If it is missing the frontend will throw an error on startup.
+
+On Render, this is set to the backend's public URL:
+```
+NEXT_PUBLIC_API_BASE_URL=https://maariv-backend.onrender.com
+```
+
+### Backend
+
+On Render, the following environment variable configures CORS to allow the deployed frontend:
+
+```
+Cors__AllowedOrigins__0=https://maariv-mini-app.onrender.com
+```
+
+Locally, the allowed origin defaults to `http://localhost:3000` (configured in `appsettings.json`).
 
 ---
 
 ## API Endpoints
 
+All endpoints are prefixed with `/api`.
+
 | Method | Path | Description |
 |--------|------|-------------|
 | `GET` | `/api/health` | Health check — returns `{ "status": "ok" }` |
 | `GET` | `/api/articles` | All articles |
-| `GET` | `/api/articles/{id}` | Single article by ID |
-| `GET` | `/api/articles/additional?excludeId={id}` | Articles excluding the given ID |
+| `GET` | `/api/articles/{id}` | Single article by numeric ID |
+| `GET` | `/api/articles/additional?excludeId={id}` | All articles excluding the given ID |
 | `GET` | `/api/tags` | All tags |
-| `GET` | `/api/tags/{id}` | Single tag by ID |
-| `GET` | `/api/categories/{id}` | Category name by ID |
-| `GET` | `/api/categories/search?prefix={prefix}` | Active categories whose name starts with prefix |
+| `GET` | `/api/tags/{id}` | Single tag by numeric ID |
+| `GET` | `/api/categories/{id}` | Category name by numeric ID |
+| `GET` | `/api/categories/search?prefix={prefix}` | Active categories whose name starts with the given prefix (case-insensitive) |
 | `POST` | `/api/logs` | Receive a frontend log entry |
 
-All success responses follow the shape `{ "success": true, "data": ... }`.  
-All error responses follow the shape `{ "success": false, "error": { "code": "...", "message": "..." } }`.
+### Response shapes
+
+**Success (2xx):**
+```json
+{ "success": true, "data": ... }
+```
+
+**Error (4xx / 5xx):**
+```json
+{ "success": false, "error": { "code": "ERROR_CODE", "message": "Human-readable message" } }
+```
+
+---
+
+## Data Files
+
+Data is stored as JSON arrays in `.txt` files under `backend/Data/`. The `.txt` extension is intentional — it signals that these are plain text snapshots, not a live database.
+
+| File | Contents |
+|------|----------|
+| `Data.txt` | Articles (`id`, `title`, `description`, `body`, `date`, `imageURL`, `imageCredit`, `tags`) |
+| `DataTags.txt` | Tags (`tagId`, `tagName`, `tagImage`) |
+| `DataCategories.txt` | Categories (`categoryId`, `categoryName`, `active`) |
+
+The files are included in both the local build output and the Docker publish output via a `<Content>` entry in the `.csproj`.
 
 ---
 
@@ -124,6 +180,21 @@ Logging failures are intentionally silent — a broken logging pipeline must nev
 
 ### Tag redirect
 
-Visiting `/tags/33` redirects to the external Maariv tag page. The redirect is handled at the edge by `src/proxy.ts` (Next.js 16 edge middleware). The redirect map lives in `src/config/redirects.ts` so new redirects can be added without touching routing logic.
+Visiting `/tags/33` redirects to the external Maariv tag page for "בנימין נתניהו". The redirect is handled at the edge by `src/proxy.ts` (Next.js 16 edge middleware) using a permanent 308 redirect. The redirect map lives in `src/config/redirects.ts` so new redirects can be added without touching routing logic.
 
-Tags that are known to redirect externally are also rendered as plain `<a>` elements in the UI (rather than `next/link`) to avoid RSC prefetch errors in the browser console.
+Tags that are known to redirect externally are rendered as plain `<a>` elements in the UI (rather than `next/link`) to avoid RSC prefetch errors in the browser console.
+
+### Lazy loading
+
+The "כתבות נוספות" (Additional Articles) section on each article page uses the [Intersection Observer API](https://developer.mozilla.org/en-US/docs/Web/API/Intersection_Observer_API) to defer the API call until the section scrolls into view. This means users who don't scroll to the bottom never trigger the extra network request.
+
+### RTL layout
+
+The app is built for right-to-left Hebrew content. Key decisions:
+- `<html lang="he" dir="rtl">` is set in the root layout.
+- Tailwind's [logical properties](https://tailwindcss.com/docs/padding#using-logical-properties) (e.g. `ps-`, `pe-`, `ms-`, `me-`) are used instead of physical `left`/`right` wherever possible.
+- Numeric dates (e.g. `26/02/2024`) are wrapped in `<time dir="ltr">` to prevent RTL reordering of the digits.
+
+### Deployment
+
+The backend is containerized with a multi-stage Dockerfile — the build stage uses the full .NET 9 SDK image and the runtime stage uses the lean `aspnet` image, keeping the final container small. The frontend is deployed as a plain Node.js service; the `start` script uses `next start -p ${PORT:-3000}` to pick up the `PORT` environment variable that Render injects automatically.
