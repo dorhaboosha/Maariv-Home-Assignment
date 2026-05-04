@@ -54,6 +54,7 @@ builder.Services.AddControllers()
 builder.Services.AddSingleton<MaarivMiniApp.Api.Services.FileDataReader>();
 builder.Services.AddScoped<MaarivMiniApp.Api.Services.ArticleService>();
 builder.Services.AddScoped<MaarivMiniApp.Api.Services.TagService>();
+builder.Services.AddScoped<MaarivMiniApp.Api.Services.CategoryService>();
 builder.Services.AddScoped<MaarivMiniApp.Api.Services.FrontendLogService>();
 
 // Allow the Next.js dev server to call this API without CORS errors.
