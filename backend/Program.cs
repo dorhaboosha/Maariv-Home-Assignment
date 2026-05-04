@@ -4,14 +4,22 @@ using Serilog;
 // - Console sink: keeps the live terminal output developers already rely on.
 // - File sink: persists every log entry to a daily rolling file under backend/logs/.
 //   Files roll at midnight; the date is embedded in the filename (e.g. app20260504.log).
+// outputTemplate includes [{Origin}] so every line is clearly labelled [Backend] or [Frontend].
+// The global enricher sets Origin=Backend for all framework and service logs;
+// FrontendLogService overrides it to Frontend for entries received from the Next.js app.
+const string outputTemplate =
+    "{Timestamp:yyyy-MM-dd HH:mm:ss} [{Level:u3}] [{Origin}] {Message:lj}{NewLine}{Exception}";
+
 Log.Logger = new LoggerConfiguration()
     .MinimumLevel.Information()
-    .WriteTo.Console()
+    .Enrich.FromLogContext()                      // allows LogContext.PushProperty overrides per log line
+    .Enrich.WithProperty("Origin", "Backend")   // default for all backend / framework logs
+    .WriteTo.Console(outputTemplate: outputTemplate)
     .WriteTo.File(
         path: "logs/app.log",
         rollingInterval: RollingInterval.Day,
-        retainedFileCountLimit: 30,          // keep at most 30 daily files (~1 month)
-        outputTemplate: "{Timestamp:yyyy-MM-dd HH:mm:ss} [{Level:u3}] {Message:lj}{NewLine}{Exception}"
+        retainedFileCountLimit: 30,
+        outputTemplate: outputTemplate
     )
     .CreateLogger();
 
