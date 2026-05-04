@@ -12,11 +12,12 @@ A monorepo containing a Hebrew news mini-application built as a home assignment.
 ```
 maariv-mini-app/
 ├── backend/               # ASP.NET Core Web API
-│   ├── Controllers/       # ArticlesController, TagsController, LogsController
-│   ├── Data/              # Data.txt (articles), DataTags.txt (tags)
+│   ├── Controllers/       # ArticlesController, TagsController, CategoriesController, LogsController
+│   ├── Data/              # Data.txt (articles), DataTags.txt (tags), DataCategories.txt (categories)
 │   ├── DTOs/              # ApiResponse<T>, ErrorResponse, ApiError
-│   ├── Models/            # Article, Tag, ArticleTag, FrontendLogEntry
-│   ├── Services/          # ArticleService, TagService, FrontendLogService, FileDataReader
+│   ├── logs/              # Daily rolling log files written by Serilog (gitignored)
+│   ├── Models/            # Article, Tag, ArticleTag, Category, FrontendLogEntry
+│   ├── Services/          # ArticleService, TagService, CategoryService, FrontendLogService, FileDataReader
 │   └── Program.cs
 └── frontend/              # Next.js app
     └── src/
@@ -88,6 +89,8 @@ This file is gitignored. If it is missing, the frontend will throw an error on s
 | `GET` | `/api/articles/additional?excludeId={id}` | Articles excluding the given ID |
 | `GET` | `/api/tags` | All tags |
 | `GET` | `/api/tags/{id}` | Single tag by ID |
+| `GET` | `/api/categories/{id}` | Category name by ID |
+| `GET` | `/api/categories/search?prefix={prefix}` | Active categories whose name starts with prefix |
 | `POST` | `/api/logs` | Receive a frontend log entry |
 
 All success responses follow the shape `{ "success": true, "data": ... }`.  
@@ -113,7 +116,9 @@ When a frontend API call fails (article fetch, tag fetch, additional articles fe
 
 1. Calls `console.error` locally for developer visibility.
 2. Sends a `POST /api/logs` request to the backend with a `FrontendLogEntry` payload containing the error message, source component, and timestamp.
-3. The backend logs the entry using `ILogger` (visible in the `dotnet run` terminal output).
+3. The backend logs the entry using Serilog — visible in the terminal **and** persisted to a rolling daily file under `backend/logs/`.
+
+Every log line is labelled `[Frontend]` or `[Backend]` so the two sources are easy to distinguish in the log file. Log files roll at midnight and are retained for 30 days. The `backend/logs/` folder is gitignored.
 
 Logging failures are intentionally silent — a broken logging pipeline must never crash or degrade the user-facing UI. The fire-and-forget `POST` is wrapped in `.catch(() => {})`.
 
